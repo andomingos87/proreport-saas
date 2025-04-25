@@ -1,0 +1,109 @@
+---
+description: Regras para banco de dados e tabelas do supabase
+globs: 
+alwaysApply: false
+---
+# Criação e consulta de tabelas
+
+- Sempre que for criar uma tabela verifique antes usando o MCP se a tabela ja existe e se precisa de atualização
+
+# Regras para Supabase
+
+## Autenticação e Gerenciamento de Sessão
+
+### Configuração do Cliente
+1. Sempre use `createBrowserClient` do `@supabase/ssr` para Next.js:
+```typescript
+import { createBrowserClient } from '@supabase/ssr'
+
+const supabase = createBrowserClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+```
+
+### Verificação de Autenticação
+1. Implemente um método `ensureAuth` em cada serviço:
+```typescript
+async ensureAuth() {
+  const { data: { session }, error } = await supabase.auth.getSession()
+  if (error) {
+    console.error('Erro de autenticação:', error)
+    throw new Error('Falha na autenticação')
+  }
+  if (!session?.user) {
+    throw new Error('User not authenticated')
+  }
+  return session.user
+}
+```
+
+2. Use o método antes de qualquer operação que requer autenticação:
+```typescript
+async create(data: any) {
+  try {
+    const user = await this.ensureAuth()
+    const user_id = user.id
+    
+    // ... resto do código
+  } catch (error) {
+    if (error.message === 'User not authenticated') {
+      toast.error('Usuário não autenticado. Por favor, faça login novamente.')
+    }
+    throw error
+  }
+}
+```
+
+### Componentes React
+1. Use o hook `useAuth` para verificar o estado da autenticação:
+```typescript
+const { loading: authLoading, user } = useAuth()
+
+useEffect(() => {
+  if (!authLoading) {
+    if (!user) {
+      toast.error('Por favor, faça login para acessar')
+      return
+    }
+    // ... carregar dados
+  }
+}, [authLoading, user])
+```
+
+### Tratamento de Erros
+1. Sempre verifique erros específicos de autenticação:
+```typescript
+try {
+  // ... operação
+} catch (error: any) {
+  if (error.message === 'User not authenticated') {
+    toast.error('Usuário não autenticado. Por favor, faça login novamente.')
+  } else {
+    toast.error(error?.message || 'Erro na operação')
+  }
+}
+```
+
+### Cuidados Importantes
+1. Nunca confie apenas no estado do frontend para autenticação
+2. Sempre verifique a sessão no servidor antes de operações críticas
+3. Implemente o middleware de autenticação para rotas protegidas
+4. Use `getSession()` em vez de `getUser()` para verificação mais robusta
+5. Mantenha mensagens de erro claras e específicas para o usuário
+6. Implemente refresh de tokens automaticamente
+7. Sempre filtre dados por `user_id` nas queries do Supabase
+
+### Estrutura de Tabelas
+1. Todas as tabelas que armazenam dados do usuário devem ter:
+```sql
+user_id UUID REFERENCES auth.users(id)
+```
+
+2. Configure RLS (Row Level Security) em todas as tabelas:
+```sql
+CREATE POLICY "Users can only access their own data"
+ON public.your_table
+FOR ALL
+USING (auth.uid() = user_id);
+```

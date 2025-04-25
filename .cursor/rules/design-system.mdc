@@ -1,0 +1,226 @@
+---
+description: Siga essas regras sempre que for criar algo no frontend
+globs: 
+alwaysApply: false
+---
+# ProReport Design System
+
+## Cores
+
+### Base
+- `background`: #FFFFFF (Claro) / #0a0a0a (Dark)
+- `foreground`: #ededed (Dark) / #171717 (Claro)
+
+### Texto
+- `text-primary`: #171717 (Claro) / #F9FAFB (Dark)
+- `text-secondary`: #6B7280 (Claro) / #9CA3AF (Dark)
+- `text-tertiary`: #9CA3AF (Claro) / #6B7280 (Dark)
+
+### Fundo
+- `bg-primary`: #ffffff (Claro) / #111827 (Dark)
+- `bg-secondary`: #F9FAFB (Claro) / #1F2937 (Dark)
+- `bg-tertiary`: #F3F4F6 (Claro) / #374151 (Dark)
+
+### Marca
+- `brand-primary`: #ffb800 (Claro) / #6C5DD3 (Dark)
+- `brand-primary-light`: rgba(255, 184, 0, 0.1) (Claro) / rgba(108, 93, 211, 0.2) (Dark)
+
+### Estado
+- `success`: #10B981 (Claro) / #059669 (Dark)
+- `warning`: #F59E0B (Claro) / #D97706 (Dark)
+- `error`: #EF4444 (Claro) / #DC2626 (Dark)
+- `info`: #3B82F6 (Claro) / #2563EB (Dark)
+
+### Bordas
+- `border-light`: #E5E7EB (Claro) / #374151 (Dark)
+
+## Tipografia
+
+### Família
+- Principal: `Inter` - Font-family moderna e legível
+- Mono: `JetBrains Mono` - Para código e dados técnicos
+
+### Tamanhos
+- `text-xs`: 12px
+- `text-sm`: 14px
+- `text-base`: 16px
+- `text-lg`: 18px
+- `text-xl`: 20px
+- `text-2xl`: 24px
+- `text-3xl`: 30px
+- `text-4xl`: 36px
+
+### Pesos
+- Regular: 400
+- Medium: 500
+- Semibold: 600
+- Bold: 700
+
+## Espaçamento
+
+### Grid
+- `spacing-1`: 4px
+- `spacing-2`: 8px
+- `spacing-3`: 12px
+- `spacing-4`: 16px
+- `spacing-6`: 24px
+- `spacing-8`: 32px
+- `spacing-12`: 48px
+- `spacing-16`: 64px
+
+### Containers
+- `container-sm`: 640px
+- `container-md`: 768px
+- `container-lg`: 1024px
+- `container-xl`: 1280px
+
+## Bordas
+
+### Border Radius
+- `rounded-none`: 0px
+- `rounded-sm`: 2px
+- `rounded`: 4px
+- `rounded-md`: 6px
+- `rounded-lg`: 8px
+- `rounded-xl`: 12px
+- `rounded-full`: 9999px
+
+### Border Width
+- `border`: 1px
+- `border-2`: 2px
+- `border-4`: 4px
+
+## Sombras
+- `shadow-sm`: 0 1px 2px rgba(0, 0, 0, 0.05)
+- `shadow`: 0 1px 3px rgba(0, 0, 0, 0.1)
+- `shadow-md`: 0 4px 6px rgba(0, 0, 0, 0.1)
+- `shadow-lg`: 0 10px 15px rgba(0, 0, 0, 0.1)
+
+## Componentes
+
+### Botões
+
+#### Variantes
+1. Primary
+```css
+background: var(--brand-primary)
+color: white
+hover: darken(var(--brand-primary), 10%)
+```
+
+2. Secondary
+```css
+background: var(--bg-primary)
+border: 1px solid var(--border-light)
+color: var(--text-primary)
+hover: var(--bg-secondary)
+```
+
+3. Danger
+```css
+background: var(--error)
+color: white
+hover: darken(var(--error), 10%)
+```
+
+#### Tamanhos
+- `sm`: padding: 8px 16px, text-sm
+- `md`: padding: 12px 20px, text-base
+- `lg`: padding: 16px 24px, text-lg
+
+### Cards
+```css
+background: var(--bg-primary)
+border: 1px solid var(--border-light)
+border-radius: rounded-lg
+padding: spacing-6
+shadow: shadow
+```
+
+### Inputs
+```css
+height: 40px
+padding: spacing-3
+border: 1px solid var(--border-light)
+border-radius: rounded
+background: var(--bg-primary)
+focus-ring: 2px var(--brand-primary-light)
+```
+
+### Modais
+```css
+background: var(--bg-primary)
+border-radius: rounded-lg
+shadow: shadow-lg
+max-width: container-sm
+padding: spacing-6
+```
+
+### Tabelas
+```css
+border: 1px solid var(--border-light)
+th: {
+  background: var(--bg-secondary)
+  padding: spacing-3
+  font-weight: semibold
+}
+td: {
+  padding: spacing-3
+  border-top: 1px solid var(--border-light)
+}
+```
+
+### Notificações
+```css
+padding: spacing-4
+border-radius: rounded
+margin-bottom: spacing-4
+
+success: {
+  background: var(--success)
+  border: var(--success)
+  color: white
+}
+error: {
+  background: var(--error)
+  border: var(--error)
+  color: white
+}
+warning: {
+  background: var(--warning)
+  border: var(--warning)
+  color: white
+}
+info: {
+  background: var(--info)
+  border: var(--info)
+  color: white
+}
+```
+
+## Breakpoints
+
+- `sm`: 640px
+- `md`: 768px
+- `lg`: 1024px
+- `xl`: 1280px
+- `2xl`: 1536px
+
+## Animações
+
+### Duração
+- `duration-75`: 75ms
+- `duration-100`: 100ms
+- `duration-150`: 150ms
+- `duration-200`: 200ms
+- `duration-300`: 300ms
+
+### Timing Functions
+- `ease-in-out`: cubic-bezier(0.4, 0, 0.2, 1)
+- `ease-in`: cubic-bezier(0.4, 0, 1, 1)
+- `ease-out`: cubic-bezier(0, 0, 0.2, 1)
+
+### Transições Comuns
+- Hover: `transition: all duration-150 ease-in-out`
+- Modal: `transition: opacity duration-300 ease-in-out`
+- Dropdown: `transition: transform duration-200 ease-out`

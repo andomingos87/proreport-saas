@@ -1,0 +1,3 @@
+Teste de saída do script
+URL do Supabase: https://wqcgyikuhfyieautzqap.supabase.co/
+Chave configurada: Sim
