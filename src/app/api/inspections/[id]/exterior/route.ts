@@ -1,21 +1,48 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { NextResponse, NextRequest } from 'next/server'
 import type { ExteriorFormData } from '@/lib/schemas/exterior'
 
 export async function POST(
-  request: Request,
+  request: NextRequest,
   context: { params: { id: string } }
 ) {
+  let response = NextResponse.next({
+    request: {
+      headers: new Headers(request.headers),
+    },
+  })
+
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const cookieStore = cookies() // Synchronously get read-only cookies
+
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            // Read from the incoming request's cookies
+            return cookieStore.get(name)?.value
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            // Modify the outgoing response's cookies
+            response.cookies.set({ name, value, ...options })
+          },
+          remove(name: string, options: CookieOptions) {
+            // Modify the outgoing response's cookies
+            response.cookies.set({ name, value: '', ...options })
+          },
+        },
+      }
+    )
+
     const { data: { session } } = await supabase.auth.getSession()
 
     if (!session) {
-      return NextResponse.json(
-        { error: 'Não autorizado' },
-        { status: 401 }
-      )
+      // Use the customized response object for returning errors
+      response = NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
+      return response
     }
 
     const body = await request.json() as ExteriorFormData
@@ -55,12 +82,17 @@ export async function POST(
       throw wallSurfaceError
     }
 
-    return NextResponse.json({ success: true })
+    // Use the customized response object for returning success
+    response = NextResponse.json({ success: true })
+    return response
+
   } catch (error) {
     console.error('Error saving exterior data:', error)
-    return NextResponse.json(
+    // Use the customized response object for returning errors
+    response = NextResponse.json(
       { error: 'Erro ao salvar os dados' },
       { status: 500 }
     )
+    return response
   }
-} 
+}
