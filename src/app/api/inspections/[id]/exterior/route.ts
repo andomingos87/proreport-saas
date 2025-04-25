@@ -5,7 +5,7 @@ import type { ExteriorFormData } from '@/lib/schemas/exterior'
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     const supabase = createRouteHandlerClient({ cookies })
@@ -19,7 +19,7 @@ export async function POST(
     }
 
     const body = await request.json() as ExteriorFormData
-    const inspectionId = params.id
+    const inspectionId = context.params.id
 
     // Salvar os dados do tamanho da construção
     const { data: buildSizeData, error: buildSizeError } = await supabase
